@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝗦𝗜𝗟𝗩𝗘𝗥 𝗠𝗗 - L'Encyclopédie de la Sécurité</title>
+    <style>
+        /* --- POLICE & RESET --- */
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: #0b0e14;
+            color: #b3ffb3;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* --- CONTENEUR PRINCIPAL --- */
+        .silver-container {
+            max-width: 1100px;
+            width: 100%;
+            background: #141a24;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.2), inset 0 0 20px rgba(0, 255, 65, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+        }
+
+        /* --- EN-TÊTE --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid #00ff4144;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            color: #00ff41;
+            text-shadow: 0 0 15px #00ff41, 0 0 30px #00ff4155;
+            letter-spacing: 5px;
+        }
+
+        .header h1 span {
+            color: #ffffff;
+            text-shadow: 0 0 10px #ffffff77;
+        }
+
+        .header .savant-tag {
+            background: #00ff4122;
+            border: 1px solid #00ff41;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #aaffaa;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* --- GRILLE --- */
+        .grid-savant {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 750px) {
+            .grid-savant {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- CARTES --- */
+        .card {
+            background: #0f151d;
+            border: 1px solid #00ff4166;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 25px #00ff4122;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: #88ff88;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px dashed #00ff4133;
+            padding-bottom: 10px;
+        }
+
+        .card-title .icon {
+            font-size: 1.5rem;
+        }
+
+        /* --- MOT DE PASSE --- */
+        .pwd-input {
+            width: 100%;
+            padding: 12px;
+            background: #0a0e14;
+            border: 1px solid #00ff4188;
+            border-radius: 8px;
+            color: #00ff41;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .pwd-input:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 20px #00ff4166;
+        }
+
+        .pwd-strength {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #0a0e14;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .weak { color: #ff5555; border: 1px solid #ff555566; }
+        .medium { color: #ffaa33; border: 1px solid #ffaa3366; }
+        .strong { color: #55ff55; border: 1px solid #55ff5566; }
+
+        .pwd-hint {
+            font-size: 0.8rem;
+            color: #88aa88;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* --- CHAT AVEC L'IA --- */
+        .chat-box {
+            background: #0a0e14;
+            border-radius: 12px;
+            height: 200px;
+            overflow-y: auto;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #00ff4133;
+            scroll-behavior: smooth;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-box::-webkit-scrollbar-track {
+            background: #0a0e14;
+        }
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #00ff4166;
+            border-radius: 10px;
+        }
+
+        .msg {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .msg.user {
+            color: #ccddff;
+            text-align: right;
+            border-right: 2px solid #5588ff;
+            padding-right: 10px;
+        }
+
+        .msg.savant {
+            color: #b3ffb3;
+            border-left: 2px solid #00ff41;
+            padding-left: 10px;
+        }
+
+        .msg.savant strong {
+            color: #88ff88;
+        }
+
+        .msg.loading {
+            color: #88aa88;
+            font-style: italic;
+            opacity: 0.8;
+            border-left: 2px solid #8888aa;
+            padding-left: 10px;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-group input {
+            flex: 1;
+            padding: 12px;
+            background: #0a0e14;
+            border: 1px solid #00ff4188;
+            border-radius: 8px;
+            color: #00ff41;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .chat-input-group input:focus {
+            border-color: #ffffff;
+        }
+
+        .btn-savant {
+            background: #00ff4122;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-savant:hover {
+            background: #00ff41;
+            color: #0b0e14;
+            box-shadow: 0 0 30px #00ff4177;
+        }
+        .btn-savant:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* --- BAS DE PAGE --- */
+        .footer-savant {
+            margin-top: 25px;
+            border-top: 1px solid #00ff4133;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #558855;
+            flex-wrap: wrap;
+        }
+
+        .footer-savant .codex {
+            color: #88ff88;
+            text-shadow: 0 0 5px #00ff4166;
+        }
+
+        .glitch-text {
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; text-shadow: 0 0 5px #00ff41; }
+            100% { opacity: 1; text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff4122; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="silver-container">
+
+        <!-- EN-TÊTE -->
+        <div class="header">
+            <h1><span>𝗦</span>ILVER <span>𝗠</span>D</h1>
+            <div class="savant-tag">⚡ L'Œil du Savant ⚡ (Alimenté par IA)</div>
+        </div>
+
+        <!-- GRILLE PRINCIPALE -->
+        <div class="grid-savant">
+
+            <!-- CARTE 1 : ANALYSEUR DE MOT DE PASSE (inchangé) -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon">🔐</span> Analyseur de robustesse
+                </div>
+                <p style="color:#88aa88; font-size:0.9rem; margin-bottom:15px;">
+                    <em>« La force d'une serrure se juge à la complexité de sa clé. »</em>
+                </p>
+                <input type="text" class="pwd-input" id="passwordInput" placeholder="Tapez un mot de passe...">
+                <div class="pwd-strength" id="strengthDisplay">En attente d'une saisie...</div>
+                <div class="pwd-hint">✅ Doit contenir majuscule, minuscule, chiffre et caractère spécial.</div>
+            </div>
+
+            <!-- CARTE 2 : CONSULTER LE SAVANT (IA OpenRouter) -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon">🧙</span> Consulter le Savant (IA)
+                </div>
+                <div class="chat-box" id="chatBox">
+                    <div class="msg savant">
+                        <strong>🧠 𝗦𝗜𝗟𝗩𝗘𝗥 𝗠𝗗 :</strong> Bonjour, jeune padawan. Grâce à l'intelligence artificielle, je réponds désormais à toutes vos questions sur la cybersécurité, WhatsApp, la purge des données et la protection en ligne. Posez-moi une question !
+                    </div>
+                </div>
+                <div class="chat-input-group">
+                    <input type="text" id="chatInput" placeholder="Ex: Comment sécuriser mon WhatsApp ?">
+                    <button class="btn-savant" id="sendChatBtn">Interroger</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PETIT TUTORIEL RAPIDE -->
+        <div class="card" style="margin-bottom: 10px;">
+            <div class="card-title">
+                <span class="icon">🧹</span> Guide éclair : La Purge de vos données WhatsApp
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size:0.95rem;">
+                <div style="flex:1; min-width:150px;">
+                    <strong style="color:#88ff88;">1. Vérifiez les sessions :</strong>
+                    <span style="color:#aaccaa;">WhatsApp > Appareils liés. Déconnectez tout ce que vous ne reconnaissez pas.</span>
+                </div>
+                <div style="flex:1; min-width:150px;">
+                    <strong style="color:#88ff88;">2. Purgez les médias :</strong>
+                    <span style="color:#aaccaa;">Paramètres > Stockage et données > Gérer le stockage. Supprimez les forwards inutiles.</span>
+                </div>
+                <div style="flex:1; min-width:150px;">
+                    <strong style="color:#88ff88;">3. Vérification 2FA :</strong>
+                    <span style="color:#aaccaa;">Activez la vérification à 2 facteurs dans Paramètres > Compte.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PIED DE PAGE -->
+        <div class="footer-savant">
+            <span>📖 <span class="codex">Codex de Sécurité</span> — Éthique & Défense</span>
+            <span>🔒 <span id="quoteDisplay">"La meilleure défense, c'est la connaissance."</span></span>
+        </div>
+
+    </div>
+
+    <script>
+        // -------------------------------------------------------------
+        // 1. ANALYSEUR DE MOT DE PASSE (inchangé)
+        // -------------------------------------------------------------
+        const pwdInput = document.getElementById('passwordInput');
+        const strengthDisplay = document.getElementById('strengthDisplay');
+
+        function analyzePassword(pwd) {
+            if (!pwd) return { score: 0, label: 'En attente d\'une saisie...', css: '' };
+
+            let score = 0;
+            if (pwd.length >= 8) score++;
+            if (pwd.length >= 12) score++;
+            if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score++;
+            if (/\d/.test(pwd)) score++;
+            if (/[^a-zA-Z0-9]/.test(pwd)) score++;
+
+            let label, css;
+            if (score <= 2) { label = '🔴 FAIBLE — Ajoutez des caractères spéciaux !';
+                css = 'weak'; } else if (score <= 4) { label = '🟡 MOYEN — Allongez-le et ajoutez des symboles.';
+                css = 'medium'; } else { label = '🟢 FORT — Excellent ! Résiste aux attaques.';
+                css = 'strong'; }
+
+            return { score, label, css };
+        }
+
+        pwdInput.addEventListener('input', function() {
+            const result = analyzePassword(this.value);
+            strengthDisplay.textContent = result.label;
+            strengthDisplay.className = 'pwd-strength ' + result.css;
+        });
+
+        // -------------------------------------------------------------
+        // 2. CHATBOT AVEC OPENROUTER (IA)
+        // -------------------------------------------------------------
+        const chatBox = document.getElementById('chatBox');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendChatBtn');
+
+        // 🔑 INSÉREZ VOTRE CLÉ API OPENROUTER ICI (récupérable sur https://openrouter.ai/keys)
+        const OPENROUTER_API_KEY = 'VOTRE_CLE_API_OPENROUTER'; // <--- Remplacez ce texte par votre clé
+
+        // ⚠️ ATTENTION : Pour un site public sur GitHub, ne partagez JAMAIS cette clé.
+        // Pour un devoir scolaire, c'est acceptable temporairement.
+        // En production, utilisez un serveur backend pour cacher la clé.
+
+        async function getAIResponse(question) {
+            // Vérifier si la clé a été remplacée
+            if (OPENROUTER_API_KEY === 'VOTRE_CLE_API_OPENROUTER') {
+                return "⚠️ **Erreur de configuration** :.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 
+            }
+
+            try {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                        'Content-Type': 'application/json',
+                        'HTTP-Referer': window.location.href, // Optionnel, mais requis par OpenRouter
+                        'X-Title': 'SILVER MD - Savant Sécurité'
+                    },
+                    body: JSON.stringify({
+                        // Modèle gratuit et performant (vous pouvez le changer)
+                        model: 'google/gemini-2.0-flash-001', // ou 'meta-llama/llama-3.2-3b-instruct:free'
+                        messages: [
+                            {
+                                role: 'system',
+                                content: `Tu es 𝗦𝗜𝗟𝗩𝗘𝗥 𝗠𝗗, un expert en cybersécurité bienveillant et érudit. 
+                                Tu enseignes la protection des données, la sécurité sur WhatsApp, la lutte contre le phishing, 
+                                la gestion des mots de passe et la purge des informations personnelles. 
+                                Tu ne dois JAMAIS donner de conseils pour pirater, usurper l'identité, ou contourner la sécurité. 
+                                Tes réponses sont concises, structurées (avec des tirets) et adaptées à un public débutant. 
+                                Si tu ne sais pas, tu dis honnêtement que tu ne sais pas.`
+                            },
+                            {
+                                role: 'user',
+                                content: question
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error('Erreur OpenRouter:', data.error);
+                    return `❌ **Erreur de l'IA** : ${data.error.message || 'Problème de connexion'}. Vérifiez votre clé API.`;
+                }
+
+                if (data.choices && data.choices.length > 0) {
+                    return data.choices[0].message.content;
+                } else {
+                    return "🤔 Le Savant est perplexe... Je n'ai pas trouvé de réponse dans ma base de connaissances. Reformulez votre question.";
+                }
+
+            } catch (error) {
+                console.error('Erreur réseau:', error);
+                return "🌐 **Erreur réseau** : Impossible de contacter le cerveau de SILVER MD. Vérifiez votre connexion Internet.";
+            }
+        }
+
+        function addMessage(text, type) {
+            const div = document.createElement('div');
+            div.className = 'msg ' + type;
+            div.innerHTML = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function removeLoadingMessage() {
+            const loading = chatBox.querySelector('.msg.loading');
+            if (loading) loading.remove();
+        }
+
+        async function handleChat() {
+            const question = chatInput.value.trim();
+            if (!question) return;
+
+            // Désactiver le bouton pendant le traitement
+            sendBtn.disabled = true;
+            sendBtn.textContent = '...';
+
+            // Afficher le message de l'utilisateur
+            addMessage(`<strong>👤 Vous :</strong> ${question}`, 'user');
+            chatInput.value = '';
+
+            // Afficher un message de chargement
+            addMessage(`⏳ Le Savant réfléchit... (IA en action)`, 'loading');
+
+            try {
+                // Appel à l'IA
+                const response = await getAIResponse(question);
+                removeLoadingMessage();
+                addMessage(`<strong>🧠 𝗦𝗜𝗟𝗩𝗘𝗥 𝗠𝗗 :</strong> ${response.replace(/\n/g, '<br>')}`, 'savant');
+            } catch (error) {
+                removeLoadingMessage();
+                addMessage(`<strong>🧠 𝗦𝗜𝗟𝗩𝗘𝗥 𝗠𝗗 :</strong> ❌ Une erreur inattendue est survenue. Veuillez réessayer.`, 'savant');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Interroger';
+            }
+        }
+
+        sendBtn.addEventListener('click', handleChat);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleChat();
+        });
+
+        // Citation aléatoire
+        const quotes = [
+            '"La meilleure défense, c\'est la connaissance."',
+            '"Un hacker éthique construit, il ne détruit pas."',
+            '"La purge des données est une renaissance numérique."',
+            '"Soyez le gardien de votre clé privée."'
+        ];
+        document.getElementById('quoteDisplay').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+        console.log('%c 𝗦𝗜𝗟𝗩𝗘𝗥 𝗠𝗗  -  Le Savant est désormais une IA ! ', 'background: #0b0e14; color: #00ff41; font-size: 20px; font-weight: bold; padding: 10px;');
+    </script>
+
+</body>
+  </html>
